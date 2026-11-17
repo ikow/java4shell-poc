@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 700" width="1400" height="700">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d1117"/>
+      <stop offset="50%" style="stop-color:#161b22"/>
+      <stop offset="100%" style="stop-color:#0d1117"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f97316"/>
+      <stop offset="100%" style="stop-color:#ef4444"/>
+    </linearGradient>
+    <linearGradient id="java" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f89820"/>
+      <stop offset="100%" style="stop-color:#e76f00"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="bigGlow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1400" height="700" fill="url(#bg)"/>
+
+  <!-- Grid pattern -->
+  <g opacity="0.04" stroke="#f97316" stroke-width="0.5">
+    <line x1="0" y1="0" x2="0" y2="700"/><line x1="50" y1="0" x2="50" y2="700"/>
+    <line x1="100" y1="0" x2="100" y2="700"/><line x1="150" y1="0" x2="150" y2="700"/>
+    <line x1="200" y1="0" x2="200" y2="700"/><line x1="250" y1="0" x2="250" y2="700"/>
+    <line x1="300" y1="0" x2="300" y2="700"/><line x1="350" y1="0" x2="350" y2="700"/>
+    <line x1="400" y1="0" x2="400" y2="700"/><line x1="450" y1="0" x2="450" y2="700"/>
+    <line x1="500" y1="0" x2="500" y2="700"/><line x1="550" y1="0" x2="550" y2="700"/>
+    <line x1="600" y1="0" x2="600" y2="700"/><line x1="650" y1="0" x2="650" y2="700"/>
+    <line x1="700" y1="0" x2="700" y2="700"/><line x1="750" y1="0" x2="750" y2="700"/>
+    <line x1="800" y1="0" x2="800" y2="700"/><line x1="850" y1="0" x2="850" y2="700"/>
+    <line x1="900" y1="0" x2="900" y2="700"/><line x1="950" y1="0" x2="950" y2="700"/>
+    <line x1="1000" y1="0" x2="1000" y2="700"/><line x1="1050" y1="0" x2="1050" y2="700"/>
+    <line x1="1100" y1="0" x2="1100" y2="700"/><line x1="1150" y1="0" x2="1150" y2="700"/>
+    <line x1="1200" y1="0" x2="1200" y2="700"/><line x1="1250" y1="0" x2="1250" y2="700"/>
+    <line x1="1300" y1="0" x2="1300" y2="700"/><line x1="1350" y1="0" x2="1350" y2="700"/>
+    <line x1="0" y1="50" x2="1400" y2="50"/><line x1="0" y1="100" x2="1400" y2="100"/>
+    <line x1="0" y1="150" x2="1400" y2="150"/><line x1="0" y1="200" x2="1400" y2="200"/>
+    <line x1="0" y1="250" x2="1400" y2="250"/><line x1="0" y1="300" x2="1400" y2="300"/>
+    <line x1="0" y1="350" x2="1400" y2="350"/><line x1="0" y1="400" x2="1400" y2="400"/>
+    <line x1="0" y1="450" x2="1400" y2="450"/><line x1="0" y1="500" x2="1400" y2="500"/>
+    <line x1="0" y1="550" x2="1400" y2="550"/><line x1="0" y1="600" x2="1400" y2="600"/>
+    <line x1="0" y1="650" x2="1400" y2="650"/>
+  </g>
+
+  <!-- Hex bytes floating (memory dump aesthetic) -->
+  <g font-family="monospace" font-size="11" fill="#f97316" opacity="0.08">
+    <text x="30" y="80">5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a</text>
+    <text x="30" y="100">5a 5a 9a 9a 9a 9a 9a 9a 9a 9a 9a 9a 9a 9a 9a 9a</text>
+    <text x="30" y="120">9a 9a 9a 9a 9a 9a 9a 9a 9a 9a 9a 9a 9a 9a 9a 9a</text>
+    <text x="850" y="580">00 00 00 00 ff ff ff ff ff ff ff ff ff ff ff ff</text>
+    <text x="850" y="600">ff ff ff ff 00 48 00 00 9a 9a 9a 9a 9a 9a 9a 9a</text>
+    <text x="850" y="620">9a 9a 9a 9a 9a 9a 9a 9a 9a 9a 9a 9a 9a 9a 9a 9a</text>
+  </g>
+
+  <!-- Coffee cup (Java icon) with crack -->
+  <g transform="translate(180, 200)" filter="url(#bigGlow)">
+    <!-- Cup body -->
+    <path d="M0,0 L0,160 Q0,210 50,210 L130,210 Q180,210 180,160 L180,0 Z"
+          fill="none" stroke="url(#java)" stroke-width="3" opacity="0.6"/>
+    <!-- Handle -->
+    <path d="M180,40 Q230,40 230,90 Q230,140 180,140"
+          fill="none" stroke="url(#java)" stroke-width="3" opacity="0.6"/>
+    <!-- Steam -->
+    <path d="M50,0 Q55,-30 45,-50 Q35,-70 50,-90" fill="none" stroke="#f89820" stroke-width="2" opacity="0.3"/>
+    <path d="M90,0 Q95,-25 85,-45 Q75,-65 90,-85" fill="none" stroke="#f89820" stroke-width="2" opacity="0.3"/>
+    <path d="M130,0 Q135,-30 125,-50 Q115,-70 130,-90" fill="none" stroke="#f89820" stroke-width="2" opacity="0.3"/>
+    <!-- Crack / corruption -->
+    <path d="M60,80 L80,110 L65,130 L90,170 L75,210"
+          fill="none" stroke="#ef4444" stroke-width="2.5" opacity="0.9" filter="url(#glow)"/>
+    <!-- Overflow bytes spilling -->
+    <g font-family="monospace" font-size="10" fill="#ef4444" opacity="0.7" filter="url(#glow)">
+      <text x="190" y="180">9a</text>
+      <text x="210" y="195">9a</text>
+      <text x="195" y="210">9a</text>
+      <text x="220" y="175">9a</text>
+      <text x="235" y="200">9a</text>
+    </g>
+  </g>
+
+  <!-- Title -->
+  <text x="700" y="230" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="80" font-weight="800" fill="url(#accent)" filter="url(#glow)">java4shell</text>
+
+  <!-- Subtitle -->
+  <text x="700" y="290" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="22" fill="#8b949e" letter-spacing="4">WRITE ONCE, RCE EVERYWHERE</text>
+
+  <!-- CVE badge -->
+  <rect x="545" y="320" width="310" height="40" rx="20" fill="none" stroke="#ef4444" stroke-width="1.5" opacity="0.8"/>
+  <text x="700" y="346" text-anchor="middle" font-family="monospace" font-size="16" fill="#ef4444" letter-spacing="2">CVE-2026-114938 · CVSS 9.2</text>
+
+  <!-- Trigger string -->
+  <rect x="310" y="400" width="780" height="44" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="330" y="428" font-family="monospace" font-size="15" fill="#f97316" opacity="0.9">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</text>
+
+  <!-- Description line -->
+  <text x="700" y="490" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" fill="#8b949e">OpenJDK AVX-512 VBMI Base64 Intrinsic · Heap Overflow · Pre-Auth RCE</text>
+
+  <!-- Bottom info -->
+  <text x="700" y="540" text-anchor="middle" font-family="monospace" font-size="13" fill="#484f58">poc · scanner · detection rules (suricata · sigma · modsecurity)</text>
+
+  <!-- Attribution -->
+  <text x="700" y="660" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" fill="#484f58">
+    Research by calif.io · PoC &amp; tools by Qi Deng
+  </text>
+
+  <!-- Accent line -->
+  <rect x="300" y="680" width="800" height="2" rx="1" fill="url(#accent)" opacity="0.4"/>
+</svg>

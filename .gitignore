@@ -1,0 +1,10 @@
+*.class
+*.jar
+*.log
+hs_err_pid*
+.idea/
+*.iml
+.vscode/
+.DS_Store
+__pycache__/
+*.pyc
