@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/cover.svg" alt="java4shell" width="700">
+  <img src="docs/cover.png" alt="java4shell" width="700">
 </p>
 
 <h1 align="center">java4shell</h1>
