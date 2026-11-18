@@ -111,6 +111,42 @@ chmod +x poc/verify_corruption.sh
 
 Tests the trigger, then confirms both mitigation flags (`-XX:-UseBASE64Intrinsics` and `-XX:UseAVX=2`) prevent the corruption.
 
+## Exploit Chain
+
+Staged exploit demonstrating escalation from memory corruption to heap disclosure. Each stage builds on the previous:
+
+| Stage | File | Primitive |
+|-------|------|-----------|
+| 1 — Writer | `WriterPrimitive.java` | Corrupt adjacent array length → OOB write |
+| 2 — JavaBleed | `JavaBleed.java` | Extend reader array → heap disclosure |
+| 3 — Feng Shui | `HeapFengShui.java` | G1 TLAB control for reliable placement |
+| 4 — Full Chain | `Java4ShellExploit.java` | WARM→SPRAY→TRIGGER→EXTEND→DISCLOSE→REPAIR |
+| 5 — Remote | `RemoteExploitSim.java` | HTTP Basic Auth attack vector simulation |
+
+```bash
+cd exploit/
+
+# Run the full chain
+chmod +x run.sh
+./run.sh chain
+
+# Or individual stages
+./run.sh writer      # Stage 1: Writer primitive
+./run.sh javableed   # Stage 2: Heap disclosure
+./run.sh fengshui    # Stage 3: Heap layout control
+./run.sh remote      # Stage 5: HTTP attack simulator
+./run.sh all         # Everything
+```
+
+**Exploitation chain (from Calif disclosure):**
+1. **Writer** — 62-byte overflow corrupts adjacent array's length field
+2. **Reader ("JavaBleed")** — Writer extends a second array → read heap past bounds
+3. **Feng Shui** — G1 GC TLAB manipulation places arrays adjacent in memory
+4. **Remote grooming** — TCP ACK timing controls server-side heap allocation order
+5. **Full chain** — WARM → REHEARSE → TRIGGER → DISCLOSE → REPAIR → FINISH
+
+Each target needs a bespoke profile (allocation sizes, GC behavior, auth flow). There is no universal exploit.
+
 ## Scanner
 
 ### Host Scanner
@@ -186,6 +222,13 @@ java4shell-poc/
 │   ├── Base64Trigger.java           # Memory corruption trigger (CVE-2026-114938)
 │   ├── verify_corruption.sh         # Full verification with mitigation tests
 │   └── run.sh                       # Quick compile-and-run helper
+├── exploit/
+│   ├── WriterPrimitive.java         # Stage 1: Array length corruption → OOB write
+│   ├── JavaBleed.java               # Stage 2: Heap disclosure via extended reader
+│   ├── HeapFengShui.java            # Stage 3: G1 TLAB heap layout control
+│   ├── Java4ShellExploit.java       # Stage 4: Full 7-phase exploit chain
+│   ├── RemoteExploitSim.java        # Stage 5: HTTP Basic Auth attack simulator
+│   └── run.sh                       # Stage runner (./run.sh chain|remote|all)
 ├── scanner/
 │   ├── java4shell_scan.sh           # Host scanner (JDK + CPU check)
 │   └── java4shell_scan.py           # Network scanner (HTTP/TLS/banner probing)
@@ -199,7 +242,8 @@ java4shell-poc/
 │   └── setup.sh                     # One-click lab setup
 ├── docs/
 │   ├── ANALYSIS.md                  # Full technical analysis
-│   └── cover.svg                    # Cover art
+│   ├── cover.png                    # DALL-E cover art
+│   └── substack_article.md          # Substack writeup
 ├── .gitignore
 ├── .gitattributes
 ├── LICENSE
