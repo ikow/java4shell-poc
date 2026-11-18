@@ -261,44 +261,44 @@ chmod +x run.sh
 
 ```
 java4shell-poc/
-├── poc/
-│   ├── Base64Trigger.java           # Memory corruption trigger (CVE-2026-114938)
-│   ├── verify_corruption.sh         # Full verification with mitigation tests
-│   └── run.sh                       # Quick compile-and-run helper
-├── exploit/
-│   ├── WriterPrimitive.java         # Stage 1: Array length corruption → OOB write
-│   ├── JavaBleed.java               # Stage 2: Heap disclosure via extended reader
-│   ├── HeapFengShui.java            # Stage 3: G1 TLAB heap layout control
-│   ├── Java4ShellExploit.java       # Stage 4: Full 7-phase exploit chain
-│   ├── RemoteExploitSim.java        # Stage 5: HTTP Basic Auth attack simulator
-│   ├── run.sh                       # Stage runner (./run.sh chain|remote|all)
-│   ├── downstream/
-│   │   ├── framework.py             # Shared exploit infrastructure
-│   │   ├── keycloak_exploit.py      # Keycloak-specific exploit chain
-│   │   ├── jenkins_exploit.py       # Jenkins-specific exploit chain
-│   │   ├── springboot_exploit.py    # Spring Boot exploit chain
-│   │   ├── elasticsearch_exploit.py # Elasticsearch exploit chain
-│   │   ├── exploit_all.py           # Unified exploit runner
-│   │   └── run.sh                   # Downstream exploit runner
-├── scanner/
-│   ├── java4shell_scan.sh           # Host scanner (JDK + CPU check)
-│   └── java4shell_scan.py           # Network scanner (HTTP/TLS/banner probing)
-├── detection/
-│   ├── java4shell.rules             # Suricata / Snort IDS rules
-│   ├── java4shell.yaml              # Sigma SIEM detection rules
-│   └── modsecurity.conf             # ModSecurity WAF rules
-├── lab/
-│   ├── Dockerfile                   # Vulnerable Java environment
-│   ├── docker-compose.yml           # Lab with optional Keycloak
-│   └── setup.sh                     # One-click lab setup
-├── docs/
-│   ├── ANALYSIS.md                  # Full technical analysis
-│   ├── cover.png                    # DALL-E cover art
-│   ├── substack_article.md          # Initial Substack writeup
-│   └── substack_article_v2.md       # Full exploitation deep dive (published)
-├── .gitignore
-├── .gitattributes
-├── LICENSE
+├── poc/                             # Proof of Concept
+│   ├── Base64Trigger.java           #   Memory corruption trigger
+│   ├── verify_corruption.sh         #   Full verification + mitigation tests
+│   └── run.sh                       #   Quick compile-and-run helper
+├── exploit/                         # Exploit Chain
+│   ├── WriterPrimitive.java         #   Stage 1: Array length corruption → OOB write
+│   ├── JavaBleed.java               #   Stage 2: Heap disclosure via extended reader
+│   ├── HeapFengShui.java            #   Stage 3: G1 TLAB heap layout control
+│   ├── Java4ShellExploit.java       #   Stage 4: Full 7-phase exploit chain
+│   ├── RemoteExploitSim.java        #   Stage 5: HTTP Basic Auth attack simulator
+│   ├── run.sh                       #   Stage runner
+│   ├── downstream/                  #   Target-specific exploit chains
+│   │   ├── framework.py             #     Shared infrastructure (HTTP, analysis, grooming)
+│   │   ├── keycloak_exploit.py      #     Keycloak 26.x
+│   │   ├── jenkins_exploit.py       #     Jenkins LTS
+│   │   ├── springboot_exploit.py    #     Spring Boot 3.x
+│   │   ├── elasticsearch_exploit.py #     Elasticsearch 8.x
+│   │   └── exploit_all.py           #     Unified runner
+│   └── targets/                     #   Docker Compose target lab
+│       ├── docker-compose.yml       #     Keycloak + Jenkins + ES + Spring Boot
+│       ├── attacker/                #     Python exploit script
+│       └── springboot/              #     Custom Spring Boot target app
+├── scanner/                         # Scanners
+│   ├── java4shell_scan.sh           #   Host scanner (JDK + CPU flags)
+│   └── java4shell_scan.py           #   Network scanner (HTTP/TLS/banner)
+├── detection/                       # Detection Rules
+│   ├── java4shell.rules             #   Suricata / Snort
+│   ├── java4shell.yaml              #   Sigma
+│   └── modsecurity.conf             #   ModSecurity
+├── lab/                             # Lab Environment
+│   ├── Dockerfile                   #   Vulnerable JDK container
+│   ├── docker-compose.yml           #   Lab setup
+│   └── setup.sh                     #   One-click launcher
+├── tests/                           # Offline regression tests
+├── docs/                            # Documentation
+│   ├── ANALYSIS.md                  #   Full technical analysis
+│   ├── substack_article_v2.md       #   Published Substack writeup
+│   └── cover.png                    #   Cover art
 └── README.md
 ```
 
@@ -345,8 +345,7 @@ After upgrading: restart all JVM processes, rebuild container images.
 
 ## References
 
-- [Exploitation deep dive](https://qideng.substack.com/p/java4shell-from-avx-512-integer-underflow) — Full exploit chain, downstream testing, heap grooming (this project)
-- [Calif.io disclosure](https://qideng.substack.com/p/java4shell-from-avx-512-integer-underflow) — Original research by Quang Luong
+- [Exploitation deep dive](https://qideng.substack.com/p/java4shell-from-avx-512-integer-underflow) — Full exploit chain, downstream testing, heap grooming
 - [OpenJDK advisory](https://openjdk.org/groups/vulnerability/advisories/2026-11-17)
 - [Oracle CPU](https://www.oracle.com/security-alerts/cspunov2026.html)
 - [Fix commit 5177a70b385c](https://github.com/openjdk/jdk/commit/5177a70b385c16f26ede191fdac7aaba0bed0f8b)
