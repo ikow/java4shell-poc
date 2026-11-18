@@ -8,7 +8,7 @@
 
 * * *
 
-On November 17th, 2026, [Calif.io](https://calif.io/java4shell/) dropped Java4Shell — a memory corruption vulnerability hiding in one of the most foundational APIs in all of Java: `Base64.getDecoder().decode()`. The [OpenJDK security advisory](https://openjdk.org/groups/vulnerability/advisories/2026-11-17) went live at 1:00 PM PT alongside an [Oracle Critical Patch Update](https://www.oracle.com/security-alerts/cspunov2026.html).
+On November 17th, 2026, [Calif.io](https://qideng.substack.com/p/java4shell-from-avx-512-integer-underflow) dropped Java4Shell — a memory corruption vulnerability hiding in one of the most foundational APIs in all of Java: `Base64.getDecoder().decode()`. The [OpenJDK security advisory](https://openjdk.org/groups/vulnerability/advisories/2026-11-17) went live at 1:00 PM PT alongside an [Oracle Critical Patch Update](https://www.oracle.com/security-alerts/cspunov2026.html).
 
 I spent the past 24 hours reproducing the vulnerability from scratch, reverse-engineering the patch, tracing the vulnerable assembly code, and building detection tooling. This writeup covers everything I found.
 
@@ -288,4 +288,4 @@ Patch your JVMs. Check your CPU flags. Run the scanner.
 
 ---
 
-*Disclosure by [Calif.io](https://calif.io/java4shell/). Research by Quang Luong. PoC, scanner, and detection rules by [Qi Deng](https://github.com/ikow). Cover art generated with OpenAI.*
+*Disclosure by [Calif.io](https://qideng.substack.com/p/java4shell-from-avx-512-integer-underflow). Research by Quang Luong. PoC, scanner, and detection rules by [Qi Deng](https://github.com/ikow). Cover art generated with OpenAI.*

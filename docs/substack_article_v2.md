@@ -320,7 +320,7 @@ The 62-byte overflow fires reliably. That part is deterministic. But converting 
 
 Each target needs a bespoke exploit profile — an understanding of that specific application's allocation patterns, GC behavior, and object lifecycle during authentication. This is comparable to browser exploit development, where each browser engine has its own heap exploitation primitives.
 
-The [Calif.io disclosure](https://calif.io/java4shell/) demonstrated working pre-auth RCE against six products (Keycloak, Jira, Confluence, Jenkins, Artifactory, PingFederate), each with its own exploit profile. The investment is per-target, not per-vulnerability.
+The [Calif.io disclosure](https://qideng.substack.com/p/java4shell-from-avx-512-integer-underflow) demonstrated working pre-auth RCE against six products (Keycloak, Jira, Confluence, Jenkins, Artifactory, PingFederate), each with its own exploit profile. The investment is per-target, not per-vulnerability.
 
 ---
 
@@ -518,6 +518,6 @@ The overflow is 62 bytes. The impact window is measured in years.
 
 ---
 
-*Disclosure by [Calif.io](https://calif.io/java4shell/). Research by Quang Luong. PoC, exploit chain, scanner, and detection rules by [Qi Deng](https://github.com/ikow). Downstream target testing on GCE Sapphire Rapids. Cover art generated with OpenAI.*
+*Disclosure by [Calif.io](https://qideng.substack.com/p/java4shell-from-avx-512-integer-underflow). Research by Quang Luong. PoC, exploit chain, scanner, and detection rules by [Qi Deng](https://github.com/ikow). Downstream target testing on GCE Sapphire Rapids. Cover art generated with OpenAI.*
 
 *Follow for updates as the exploitation landscape evolves.*

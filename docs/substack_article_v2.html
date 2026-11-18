@@ -304,7 +304,7 @@ byte[] decoded = Base64.getDecoder().decode(b64);  // OVERFLOW HERE</code></pre>
 
 <p>Each target needs a bespoke exploit profile — an understanding of that specific application's allocation patterns, GC behavior, and object lifecycle during authentication. This is comparable to browser exploit development, where each browser engine has its own heap exploitation primitives.</p>
 
-<p>The <a href="https://calif.io/java4shell/" target="_blank">Calif.io disclosure</a> demonstrated working pre-auth RCE against six products (Keycloak, Jira, Confluence, Jenkins, Artifactory, PingFederate), each with its own exploit profile. The investment is per-target, not per-vulnerability.</p>
+<p>The <a href="https://qideng.substack.com/p/java4shell-from-avx-512-integer-underflow" target="_blank">Calif.io disclosure</a> demonstrated working pre-auth RCE against six products (Keycloak, Jira, Confluence, Jenkins, Artifactory, PingFederate), each with its own exploit profile. The investment is per-target, not per-vulnerability.</p>
 
 <hr>
 
@@ -525,7 +525,7 @@ cd ../downstream &amp;&amp; python3 exploit_all.py --target all
 
 <hr>
 
-<p><em>Disclosure by <a href="https://calif.io/java4shell/" target="_blank">Calif.io</a>. Research by Quang Luong. PoC, exploit chain, scanner, and detection rules by <a href="https://github.com/ikow" target="_blank">Qi Deng</a>. Downstream target testing on GCE Sapphire Rapids. Cover art generated with OpenAI.</em></p>
+<p><em>Disclosure by <a href="https://qideng.substack.com/p/java4shell-from-avx-512-integer-underflow" target="_blank">Calif.io</a>. Research by Quang Luong. PoC, exploit chain, scanner, and detection rules by <a href="https://github.com/ikow" target="_blank">Qi Deng</a>. Downstream target testing on GCE Sapphire Rapids. Cover art generated with OpenAI.</em></p>
 
 <p><em>Follow for updates as the exploitation landscape evolves.</em></p>
 

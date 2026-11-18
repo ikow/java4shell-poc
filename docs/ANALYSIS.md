@@ -286,7 +286,7 @@ java -XX:UseAVX=2 MyApp   # DO NOT use on ARM — JVM fails to start
 
 ## 11. References
 
-- [Calif.io disclosure](https://calif.io/java4shell/)
+- [Calif.io disclosure](https://qideng.substack.com/p/java4shell-from-avx-512-integer-underflow)
 - [OpenJDK advisory](https://openjdk.org/groups/vulnerability/advisories/2026-11-17)
 - [Oracle CPU](https://www.oracle.com/security-alerts/cspunov2026.html)
 - [Fix commit 5177a70b385c](https://github.com/openjdk/jdk/commit/5177a70b385c16f26ede191fdac7aaba0bed0f8b) (JDK-8393212)
