@@ -229,6 +229,34 @@ cd poc && javac Base64Trigger.java && java Base64Trigger
 ./scanner/java4shell_scan.sh
 ```
 
+## Downstream Target Exploits
+
+Target-specific exploit chains for real-world applications. Each module implements:
+reconnaissance → multi-threaded JIT warmup → heap grooming → trigger → JavaBleed detection.
+
+| Target | Vector | Grooming Strategy |
+|--------|--------|-------------------|
+| **Keycloak 26.x** | Token endpoint Basic Auth | `client_id` size variation → TLAB layout control |
+| **Jenkins LTS** | Any API endpoint Basic Auth | Multi-endpoint rotation, `tree` depth, Cookie spray |
+| **Spring Boot 3.x** | `BasicAuthenticationFilter` | Tomcat `ByteChunk` header-size sweep |
+| **Elasticsearch 8.x** | X-Pack `SecurityHttpFilter` | `_bulk` / `_search` / `_cat` allocation patterns |
+
+```bash
+cd exploit/downstream/
+
+# All targets (against Docker Compose lab)
+python3 exploit_all.py --target all
+
+# Single target with custom URL
+python3 exploit_all.py --target keycloak --url http://keycloak:8080 --warmup 10000
+
+# Via runner script
+chmod +x run.sh
+./run.sh docker          # Against local Docker lab
+./run.sh keycloak        # Single target
+./run.sh remote keycloak https://keycloak.internal:8443
+```
+
 ## Repository Structure
 
 ```
@@ -243,7 +271,15 @@ java4shell-poc/
 │   ├── HeapFengShui.java            # Stage 3: G1 TLAB heap layout control
 │   ├── Java4ShellExploit.java       # Stage 4: Full 7-phase exploit chain
 │   ├── RemoteExploitSim.java        # Stage 5: HTTP Basic Auth attack simulator
-│   └── run.sh                       # Stage runner (./run.sh chain|remote|all)
+│   ├── run.sh                       # Stage runner (./run.sh chain|remote|all)
+│   ├── downstream/
+│   │   ├── framework.py             # Shared exploit infrastructure
+│   │   ├── keycloak_exploit.py      # Keycloak-specific exploit chain
+│   │   ├── jenkins_exploit.py       # Jenkins-specific exploit chain
+│   │   ├── springboot_exploit.py    # Spring Boot exploit chain
+│   │   ├── elasticsearch_exploit.py # Elasticsearch exploit chain
+│   │   ├── exploit_all.py           # Unified exploit runner
+│   │   └── run.sh                   # Downstream exploit runner
 ├── scanner/
 │   ├── java4shell_scan.sh           # Host scanner (JDK + CPU check)
 │   └── java4shell_scan.py           # Network scanner (HTTP/TLS/banner probing)
