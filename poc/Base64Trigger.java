@@ -8,8 +8,10 @@ public final class Base64Trigger {
 
     public static void main(String[] args) {
         Base64.Decoder decoder = Base64.getDecoder();
-        byte[] valid = "A".repeat(64).getBytes(StandardCharsets.US_ASCII);
-        byte[] malformed = ("A".repeat(64) + "=").getBytes(StandardCharsets.US_ASCII);
+        int length = Runtime.version().feature() == 17 ? 128 : 64;
+        int outputEnd = length / 4 * 3 + 2;
+        byte[] valid = "A".repeat(length).getBytes(StandardCharsets.US_ASCII);
+        byte[] malformed = ("A".repeat(length) + "=").getBytes(StandardCharsets.US_ASCII);
         byte[] target = new byte[4096];
 
         // Warm up the JIT so C2 compiles the Base64 intrinsic (AVX-512 path)
@@ -26,11 +28,11 @@ public final class Base64Trigger {
             rejected = true;
         }
 
-        // Check for out-of-bounds corruption past offset 50
+        // Inspect beyond the expected output, inside the allocated destination.
         int changed = 0;
         int first = -1;
         int last = -1;
-        for (int i = 50; i < target.length; i++) {
+        for (int i = outputEnd; i < target.length; i++) {
             if (target[i] != (byte) 0x5a) {
                 changed++;
                 if (first < 0) first = i;
@@ -43,7 +45,7 @@ public final class Base64Trigger {
         System.out.printf("rejected=%s changed=%d first=%d last=%d%n",
             rejected, changed, first, last);
 
-        if (!rejected || changed != 62 || first != 50 || last != 111) {
+        if (!rejected || changed != 62 || first != outputEnd || last != outputEnd + 61) {
             System.err.println("NOT REPRODUCED");
             System.exit(1);
         }

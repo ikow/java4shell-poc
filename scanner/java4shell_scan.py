@@ -33,30 +33,31 @@ VULN_RANGES = {
 JAVA_SIGNATURES = [
     re.compile(r"(?:OpenJDK|Java|Temurin|Corretto|Zulu|GraalVM)[/ ]*([\d.]+)", re.I),
     re.compile(r"X-Powered-By:.*Java/([\d.]+)", re.I),
-    re.compile(r"Server:.*(?:Jetty|Tomcat|WildFly|Undertow|GlassFish)[/ ]*([\d.]+)?", re.I),
+    re.compile(r"Server:.*(?:Jetty|Tomcat|WildFly|Undertow|GlassFish)", re.I),
 ]
 
 DEFAULT_PORTS = [80, 443, 8080, 8443, 8081, 9200, 9090, 7990, 8090, 8888]
 
 
 def parse_version(version_str):
+    if not re.fullmatch(r"\d+\.\d+\.\d+(?:\.\d+)?", version_str):
+        return None
     parts = version_str.split(".")
     try:
         major = int(parts[0])
         minor = int(parts[1]) if len(parts) > 1 else 0
         patch = int(parts[2]) if len(parts) > 2 else 0
-        return major, minor, patch
+        update = int(parts[3]) if len(parts) > 3 else 0
+        return major, minor, patch, update
     except (ValueError, IndexError):
         return None
 
 
-def is_vulnerable(major, minor, patch):
+def is_vulnerable(major, minor, patch, update=0):
     if major not in VULN_RANGES:
-        return False
+        return None
     r = VULN_RANGES[major]
-    if major == 17:
-        return minor == 0 and r["min_patch"] <= patch <= r["max_patch"]
-    return minor == 0 and patch <= r["max_patch"]
+    return minor == 0 and r["min_patch"] <= patch and (patch, update) < (r["max_patch"], 1)
 
 
 def probe_http(host, port, timeout=5):
@@ -128,7 +129,8 @@ def probe_banner(host, port, timeout=3):
 
 
 def scan_host(host, ports, timeout=5):
-    results = {"host": host, "ports": {}, "vulnerable": False, "java_detected": False}
+    results = {"host": host, "ports": {}, "vulnerable": None, "candidate": False,
+               "assessment": "INCONCLUSIVE", "java_detected": False}
 
     for port in ports:
         port_results = []
@@ -144,11 +146,17 @@ def scan_host(host, ports, timeout=5):
                 ver_str = finding.get("version")
                 if ver_str:
                     parsed = parse_version(ver_str)
-                    if parsed and is_vulnerable(*parsed):
-                        finding["status"] = "VULNERABLE"
-                        results["vulnerable"] = True
+                    match = is_vulnerable(*parsed) if parsed else None
+                    if match is True:
+                        finding["status"] = "VERSION_CANDIDATE"
+                        results["candidate"] = True
+                        results["assessment"] = "CANDIDATE"
+                    elif match is False:
+                        finding["status"] = "OUTSIDE_KNOWN_RANGE"
                     else:
-                        finding["status"] = "likely_safe"
+                        finding["status"] = "UNKNOWN"
+                else:
+                    finding["status"] = "UNKNOWN"
 
     return results
 
@@ -204,22 +212,23 @@ def main():
             result = future.result()
             all_results.append(result)
             if not args.json:
-                if result["vulnerable"]:
+                if result["candidate"]:
                     vuln_count += 1
-                    print(f"  \033[0;31mVULN\033[0m  {result['host']}")
+                    print(f"  CANDIDATE  {result['host']} — version hint only")
                     for port, findings in result["ports"].items():
                         for f in findings:
                             status = f.get("status", "")
                             ver = f.get("version", "unknown")
                             print(f"         :{port} — {f['source']}: {f.get('match', '')} [{status}]")
-                elif result["java_detected"]:
-                    print(f"  \033[0;32mSAFE\033[0m  {result['host']}")
+                else:
+                    print(f"  INCONCLUSIVE  {result['host']} — no confirmed runtime assessment")
 
     if args.json:
         print(json.dumps(all_results, indent=2))
     else:
         print(f"\n{'═' * 51}")
-        print(f"Scanned: {len(targets)}  Java detected: {sum(1 for r in all_results if r['java_detected'])}  Vulnerable: {vuln_count}")
+        print(f"Scanned: {len(targets)}  Java hints: {sum(1 for r in all_results if r['java_detected'])}  Candidates: {vuln_count}")
+        print("Network hints cannot verify guest CPU flags, effective JVM flags or vendor backports.")
 
 
 if __name__ == "__main__":
