@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <a href="#poc">PoC</a> · <a href="#scanner">Scanner</a> · <a href="#detection-rules">Detection</a> · <a href="#quick-start">Lab</a> · <a href="docs/ANALYSIS.md">Analysis</a> · <a href="https://calif.io/java4shell/">Disclosure</a>
+  <a href="#poc">PoC</a> · <a href="#scanner">Scanner</a> · <a href="#detection-rules">Detection</a> · <a href="#quick-start">Lab</a> · <a href="docs/ANALYSIS.md">Analysis</a> · <a href="https://qideng.substack.com/p/java4shell-from-avx-512-integer-underflow">Writeup</a> · <a href="https://calif.io/java4shell/">Disclosure</a>
 </p>
 
 ---
@@ -24,7 +24,7 @@ Memory corruption in OpenJDK HotSpot's AVX-512 VBMI Base64 decoding intrinsic. A
 
 Discovered by [Quang Luong](https://calif.io/java4shell/) of Calif.io using AI-assisted vulnerability research. Pre-auth RCE demonstrated against Keycloak, Jira, Confluence, Jenkins, Artifactory, and PingFederate.
 
-**Author:** [Qi Deng](https://github.com/ikow) &nbsp;|&nbsp; **Disclosure:** [calif.io/java4shell](https://calif.io/java4shell/) &nbsp;|&nbsp; **Date:** 2026-11-17
+**Author:** [Qi Deng](https://github.com/ikow) &nbsp;|&nbsp; **Writeup:** [Substack](https://qideng.substack.com/p/java4shell-from-avx-512-integer-underflow) &nbsp;|&nbsp; **Disclosure:** [calif.io/java4shell](https://calif.io/java4shell/) &nbsp;|&nbsp; **Date:** 2026-11-17
 
 ## CVE Details
 
@@ -294,7 +294,8 @@ java4shell-poc/
 ├── docs/
 │   ├── ANALYSIS.md                  # Full technical analysis
 │   ├── cover.png                    # DALL-E cover art
-│   └── substack_article.md          # Substack writeup
+│   ├── substack_article.md          # Initial Substack writeup
+│   └── substack_article_v2.md       # Full exploitation deep dive (published)
 ├── .gitignore
 ├── .gitattributes
 ├── LICENSE
@@ -344,6 +345,7 @@ After upgrading: restart all JVM processes, rebuild container images.
 
 ## References
 
+- [Exploitation deep dive](https://qideng.substack.com/p/java4shell-from-avx-512-integer-underflow) — Full exploit chain, downstream testing, heap grooming (this project)
 - [Calif.io disclosure](https://calif.io/java4shell/) — Original research by Quang Luong
 - [OpenJDK advisory](https://openjdk.org/groups/vulnerability/advisories/2026-11-17)
 - [Oracle CPU](https://www.oracle.com/security-alerts/cspunov2026.html)
