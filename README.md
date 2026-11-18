@@ -109,7 +109,9 @@ chmod +x poc/verify_corruption.sh
 ./poc/verify_corruption.sh
 ```
 
-Tests the trigger, then confirms both mitigation flags (`-XX:-UseBASE64Intrinsics` and `-XX:UseAVX=2`) prevent the corruption.
+Tests the bounded trigger, then checks `-XX:-UseBASE64Intrinsics` in a separate process. Java 17 uses the 128-character variant. A negative test is **not** a safety verdict: inherited JVM options, unavailable intrinsics, or JIT behavior can prevent reproduction. The wrapper requires a matching `javac`, uses a private temporary directory and timeouts, and distinguishes errors from valid test output.
+
+Exit codes: `1` = corruption reproduced and the mitigation control passed; `2` = skipped, not reproduced, or inconclusive. This does not inspect or change the running application's configuration. Use only on authorized hosts, in a separate unprivileged process; do not use `exploit/` for production verification.
 
 ## Exploit Chain
 
@@ -151,18 +153,22 @@ Each target needs a bespoke profile (allocation sizes, GC behavior, auth flow). 
 
 ### Host Scanner
 
-Checks all Java installations on the local machine for vulnerability:
+Checks discoverable Java installations in the visible filesystem for version candidates:
 
 ```bash
 chmod +x scanner/java4shell_scan.sh
 ./scanner/java4shell_scan.sh
 ```
 
-Verifies: CPU flags (AVX-512 VBMI) → Java version → running JVM mitigation flags.
+Checks all four required guest CPU flags, full four-component version boundaries, and effective `UseBASE64Intrinsics` values using a matching `jcmd`. Nix store paths and visible process executables are included; additional Java binary paths can be passed as arguments. Run within each relevant container namespace with appropriate permissions. Missing tools, permissions or unrecognized versions produce `UNKNOWN`, not `SAFE`. Process command lines are not printed.
+
+Version ranges are triage hints, not authoritative vendor patch detection: verify vendor backports separately. Exit codes: `1` = candidates found; `2` = unknown checks with no candidates; `0` = no candidates found or a missing hardware prerequisite. None of these clears undiscovered/container runtimes, and hardware exclusions apply only to current placement. `timeout` and Bash are required; effective process inspection requires `jcmd` attach permissions and may be unavailable.
 
 ### Network Scanner
 
 Probes remote hosts for vulnerable Java versions via HTTP headers, TLS certs, and service banners:
+
+Network results are **hints only**: `CANDIDATE` or `INCONCLUSIVE`, never a confirmed vulnerability or safety verdict. Application-server versions are not JDK versions. JSON retains `vulnerable` as `null` and adds `candidate` and `assessment`; consumers must not treat `null` or lack of findings as safe. The scanner cannot establish CPU eligibility, vendor backports or live mitigation settings.
 
 ```bash
 # Single host
@@ -177,6 +183,15 @@ python3 scanner/java4shell_scan.py --targets hosts.txt --threads 50
 # JSON output
 python3 scanner/java4shell_scan.py --host app.example.com --json
 ```
+
+## Offline regression tests
+
+```bash
+python3 -m unittest discover -s tests -v
+bash -n scanner/java4shell_scan.sh poc/verify_corruption.sh
+```
+
+Tests use synthetic versions, process flags and JVM outcomes; they do not contact target hosts or execute the corruption trigger.
 
 ## Detection Rules
 
